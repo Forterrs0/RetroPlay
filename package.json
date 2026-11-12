@@ -1,0 +1,27 @@
+{
+  "name": "retro-play",
+  "version": "3.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Retro Play — streaming demonstrativo com acesso, locação e assinatura sandbox",
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "scripts": {
+    "start": "node server/server.mjs",
+    "dev": "node --watch server/server.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "admin": "node scripts/create-admin.mjs",
+    "media": "bash scripts/generate-media.sh",
+    "db:migrate": "node scripts/migrar-sqlite-para-postgres.mjs",
+    "pg:check": "node postgres/check-pg.mjs",
+    "pg:migrate": "node postgres/migrate-sqlite-to-pg.mjs",
+    "start:pg": "node --env-file=.env server/server.mjs",
+    "admin:pg": "node --env-file=.env scripts/create-admin-pg.mjs",
+    "test:pg-sql": "node --test tests/pg-sql.test.mjs",
+    "deploy:check": "node scripts/check-deployment.mjs"
+  },
+  "dependencies": {
+    "pg": "^8.13.3"
+  }
+}

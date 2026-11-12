@@ -1,0 +1,15 @@
+RETRO PLAY V3 - CADASTRO CORRIGIDO
+
+1. Feche as janelas do Retro Play antigo e feche a aba antiga do navegador.
+2. Extraia o ZIP inteiro (nao execute arquivos de dentro do ZIP).
+3. Instale Node.js 22.13 ou superior (https://nodejs.org/).
+4. Execute INICIAR_RETRO_PLAY.bat e mantenha essa janela aberta.
+5. Acesse http://127.0.0.1:4173 no navegador (nao abra index.html).
+6. Clique em CADASTRAR. Digite nome com 2+ caracteres, e-mail valido
+   e senha com 10+ caracteres, repetindo a mesma senha.
+7. Se der erro, o texto vermelho abaixo do titulo indica o motivo.
+8. Se ainda falhar, deixe o servidor aberto, execute
+   DIAGNOSTICAR_CADASTRO.bat e envie o resultado da janela.
+
+ATENCAO: a conta e criada no banco local; nao existe conta global online.
+Esta e uma aplicacao demonstrativa, nao um streaming comercial pronto.

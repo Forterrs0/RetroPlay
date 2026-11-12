@@ -1,0 +1,630 @@
+# PROJETO: RETRO PLAY — PLATAFORMA COMPLETA DE STREAMING
+
+Quero desenvolver uma plataforma de streaming chamada **Retro Play**.
+
+O objetivo é criar um serviço de entretenimento digital com identidade visual própria, inspirado na experiência de navegação do Amazon Prime Video e Netflix, mas com funcionalidades adicionais, uma interface mais criativa e uma identidade retrô-futurista.
+
+**ATENÇÃO: NÃO QUERO APENAS UM PROTÓTIPO VISUAL.**
+
+Quero uma aplicação funcional, com frontend, backend, banco de dados, autenticação, gerenciamento de usuários, assinaturas, aluguel individual de filmes, pagamentos de teste e reprodução real de vídeos autorizados.
+
+Você deverá desenvolver, executar, testar e corrigir o projeto.
+
+---
+
+# 1. IDENTIDADE VISUAL
+
+Nome: Retro Play.
+
+Crie uma identidade visual própria, profissional e reconhecível.
+
+Direção artística:
+- Interface escura e cinematográfica.
+- Fundo predominantemente preto ou grafite.
+- Detalhes em roxo, azul elétrico e cores neon discretas.
+- Elementos retrô inspirados em cinemas antigos, fitas VHS e fliperamas.
+- Animações suaves.
+- Cards com imagens grandes.
+- Tipografia moderna.
+- Ícones minimalistas.
+- Efeitos de iluminação discretos.
+- Transições fluidas entre menus.
+
+Não quero uma aparência genérica de template.
+
+O site precisa parecer uma plataforma comercial de streaming.
+
+A interface deverá ser responsiva para computadores, celulares e tablets.
+
+# 2. PÁGINA INICIAL
+
+Criar uma homepage cinematográfica contendo:
+
+- Logo Retro Play.
+- Menu de navegação.
+- Barra de pesquisa.
+- Botão de login.
+- Botão de assinatura.
+- Banner principal com filme em destaque.
+- Imagem de fundo cinematográfica.
+- Título, descrição e classificação indicativa.
+- Botão Assistir agora.
+- Botão Ver detalhes.
+- Seções horizontais de filmes.
+
+Categorias da homepage:
+
+- Em alta.
+- Lançamentos.
+- Mais assistidos.
+- Filmes de ação.
+- Terror.
+- Ficção científica.
+- Comédia.
+- Drama.
+- Animação.
+- Clássicos.
+- Filmes gratuitos.
+- Disponíveis para aluguel.
+- Retro Play Originals.
+
+Criar carrosséis com navegação por setas e suporte a gestos no celular.
+
+# 3. SISTEMA DE NAVEGAÇÃO
+
+Criar menus interativos e organizados.
+
+Menu principal:
+
+- Início.
+- Filmes.
+- Séries.
+- Categorias.
+- Minha lista.
+- Minha conta.
+- Assinatura.
+
+Adicionar menus suspensos e animações de abertura.
+
+Criar uma página individual para cada categoria.
+
+A pesquisa deverá funcionar de verdade, procurando títulos, atores, diretores, gêneros e palavras-chave.
+
+Adicionar filtros por:
+- Gênero.
+- Ano.
+- Classificação indicativa.
+- Popularidade.
+- Avaliação.
+- Disponibilidade.
+- Gratuito, assinatura ou aluguel.
+
+# 4. PÁGINA DE DETALHES DO FILME
+
+Cada filme deverá possuir sua própria página.
+
+Exibir:
+
+- Capa.
+- Banner.
+- Título.
+- Sinopse.
+- Ano.
+- Duração.
+- Gêneros.
+- Classificação indicativa.
+- Direção.
+- Elenco.
+- Avaliação.
+- Trailer.
+- Filmes semelhantes.
+- Disponibilidade.
+
+Adicionar três situações:
+
+A) Filme disponível na assinatura:
+Exibir botão "Assistir agora".
+
+B) Filme disponível para aluguel:
+Exibir botão "Alugar filme".
+
+C) Filme bloqueado:
+Exibir uma mensagem semelhante à experiência de plataformas de streaming:
+
+"Este título não está incluído no seu acesso atual."
+
+Apresentar opções para assinar o Retro Play ou alugar o filme individualmente, quando essa opção estiver disponível.
+
+Não permitir que usuários sem autorização reproduzam o conteúdo protegido.
+
+# 5. SISTEMA DE ASSINATURAS
+
+Criar uma estrutura funcional de planos.
+
+Inicialmente utilizar preços fictícios e editáveis pelo administrador.
+
+Exemplo:
+
+Plano Retro Play Mensal:
+R$ 19,90 por mês.
+
+Plano Retro Play Anual:
+R$ 149,90 por ano.
+
+Esses valores são apenas exemplos.
+
+Funcionalidades:
+
+- Cadastro de assinatura.
+- Ativação após pagamento confirmado.
+- Data de início.
+- Data de vencimento.
+- Histórico de pagamentos.
+- Renovação.
+- Cancelamento.
+- Identificação de assinatura ativa ou expirada.
+- Controle de acesso ao catálogo.
+
+Quando o usuário possuir uma assinatura ativa, poderá assistir aos conteúdos incluídos no plano.
+
+Quando a assinatura vencer ou for cancelada, o sistema deverá retirar o acesso aos conteúdos exclusivos da assinatura conforme as regras contratuais.
+
+Filmes alugados individualmente deverão continuar disponíveis até o término do período de locação, independentemente da assinatura.
+
+# 6. SISTEMA DE ALUGUEL INDIVIDUAL
+
+Esta funcionalidade é extremamente importante.
+
+O usuário não deverá precisar assinar o Retro Play para assistir a um filme disponível para aluguel.
+
+Funcionamento:
+
+1. Usuário acessa um filme.
+2. Clica em "Alugar filme".
+3. O sistema apresenta o preço.
+4. Usuário confirma a compra.
+5. Sistema processa o pagamento de teste.
+6. Após confirmação, libera o filme.
+7. O sistema registra a data da compra e o período de acesso.
+
+Exemplo de locação:
+
+- Preço: R$ 7,90.
+- Tempo para começar a assistir: 30 dias.
+- Depois de iniciar a reprodução: 48 horas para terminar de assistir.
+
+Esses valores deverão ser configuráveis individualmente por filme.
+
+O aluguel precisa ser independente da assinatura.
+
+# 7. SISTEMA DE PAGAMENTO
+
+Criar uma integração preparada para Mercado Pago ou outro provedor compatível.
+
+Inicialmente utilizar ambiente SANDBOX/TESTE.
+
+Não realizar cobranças reais.
+
+Implementar:
+
+- Checkout.
+- Criação de pedidos.
+- Identificação do usuário.
+- Identificação do produto.
+- Valor da transação.
+- Confirmação por webhook.
+- Histórico de transações.
+- Estados de pagamento.
+- Pagamento aprovado.
+- Pagamento pendente.
+- Pagamento recusado.
+- Cancelamento.
+
+A liberação do conteúdo deverá acontecer somente após confirmação confiável do pagamento pelo backend.
+
+Não confiar em informações enviadas diretamente pelo navegador.
+
+Não armazenar dados de cartões bancários.
+
+Criar uma arquitetura que permita ativar pagamentos reais posteriormente, mediante configuração e credenciais legítimas.
+
+# 8. REPRODUÇÃO REAL DOS FILMES
+
+Quero que os filmes possam ser reproduzidos diretamente no Retro Play.
+
+Não quero que o usuário seja redirecionado para outro site para assistir.
+
+Desenvolver um player próprio integrado à plataforma.
+
+Funcionalidades do player:
+
+- Play e pause.
+- Controle de volume.
+- Tela cheia.
+- Barra de progresso.
+- Controle de qualidade.
+- Legendas.
+- Seleção de áudio, quando disponível.
+- Velocidade de reprodução.
+- Continuar assistindo.
+- Retomar do último ponto.
+- Próximo episódio.
+- Interface adaptada para celular.
+
+Utilizar streaming adaptativo HLS ou tecnologia equivalente.
+
+ARQUITETURA DE VÍDEO:
+
+Não armazenar vídeos diretamente no banco de dados.
+
+Não colocar arquivos de filmes grandes dentro do projeto frontend.
+
+Utilizar armazenamento de objetos compatível com S3 e uma CDN para distribuição.
+
+Preparar o sistema para:
+
+- Upload de vídeos autorizados.
+- Processamento com FFmpeg.
+- Conversão para diferentes resoluções.
+- Geração de playlists HLS.
+- Armazenamento das versões processadas.
+- Entrega por CDN.
+- URLs temporárias e assinadas.
+- Controle de acesso antes de iniciar a reprodução.
+
+Qualidade sugerida:
+- 360p.
+- 480p.
+- 720p.
+- 1080p.
+
+O player deverá selecionar automaticamente a qualidade conforme a conexão do usuário.
+
+Criar um sistema de proteção para impedir que usuários não autorizados acessem diretamente os arquivos de vídeo.
+
+Preparar suporte a DRM quando houver conteúdo licenciado que exija essa proteção.
+
+Para demonstração, utilizar vídeos de teste, trailers autorizados ou filmes de domínio público.
+
+# 9. CONTINUAR ASSISTINDO
+
+Criar uma seção chamada "Continuar assistindo".
+
+Salvar automaticamente:
+
+- Filme.
+- Usuário.
+- Posição atual.
+- Duração.
+- Última reprodução.
+
+Quando o usuário retornar, o filme deverá aparecer na seção.
+
+Ao clicar, a reprodução deverá continuar de onde parou.
+
+Salvar o progresso periodicamente e ao pausar ou sair do player.
+
+# 10. PERFIS DE USUÁRIO
+
+Permitir que cada conta possua múltiplos perfis.
+
+Cada perfil terá:
+
+- Nome.
+- Avatar.
+- Lista de favoritos.
+- Histórico.
+- Progresso de reprodução.
+- Preferências.
+- Controle parental opcional.
+
+Adicionar perfil infantil com restrições de conteúdo e classificação indicativa.
+
+# 11. MINHA LISTA
+
+Criar uma funcionalidade para adicionar filmes e séries aos favoritos.
+
+O usuário poderá:
+
+- Adicionar.
+- Remover.
+- Consultar sua lista.
+- Acessar rapidamente os títulos salvos.
+
+A lista deverá ficar armazenada no banco de dados.
+
+# 12. AVALIAÇÕES E INTERAÇÃO
+
+Criar sistema de avaliações.
+
+O usuário poderá:
+
+- Dar nota.
+- Avaliar um filme.
+- Consultar avaliações.
+- Visualizar média das avaliações.
+
+Impedir avaliações duplicadas do mesmo usuário para o mesmo filme, permitindo atualizar sua avaliação.
+
+# 13. FUNCIONALIDADES CRIATIVAS
+
+Quero funcionalidades que diferenciem o Retro Play de outras plataformas.
+
+Implementar:
+
+A) MODO CINEMA
+Uma interface especial de reprodução com elementos visuais discretos, escurecimento do ambiente visual e controles minimalistas.
+
+B) MÁQUINA DO TEMPO
+Uma seção que permite explorar filmes por décadas:
+- Anos 1950.
+- Anos 1960.
+- Anos 1970.
+- Anos 1980.
+- Anos 1990.
+- Anos 2000.
+- Anos 2010.
+- Anos 2020.
+
+C) SURPRESA RETRO
+Botão que seleciona aleatoriamente um filme disponível para aquele usuário, respeitando suas permissões de acesso.
+
+D) ROLETAS DE GÊNEROS
+Uma experiência interativa para descobrir filmes escolhendo gêneros.
+
+E) CONQUISTAS
+Criar conquistas como:
+- Primeiro filme assistido.
+- Cinco filmes assistidos.
+- Maratona de fim de semana.
+- Explorador dos clássicos.
+- Colecionador de terror.
+
+F) RETRO RECAP
+Criar uma página com estatísticas pessoais:
+- Filmes assistidos.
+- Horas assistidas.
+- Gênero favorito.
+- Década mais assistida.
+- Últimos filmes assistidos.
+
+G) EXPERIÊNCIA VHS
+Criar uma opção visual temática VHS, com animações e efeitos discretos, sem prejudicar a qualidade real do vídeo.
+
+H) RECOMENDAÇÕES
+Criar recomendações com base nos gêneros e no histórico de visualização.
+
+# 14. PAINEL ADMINISTRATIVO
+
+Criar uma área administrativa separada.
+
+Somente administradores autorizados poderão acessá-la.
+
+Funcionalidades:
+
+- Dashboard.
+- Quantidade de usuários.
+- Assinaturas ativas.
+- Assinaturas vencidas.
+- Filmes cadastrados.
+- Filmes alugados.
+- Receita registrada.
+- Pagamentos.
+- Gerenciamento de usuários.
+- Gerenciamento de filmes.
+- Gerenciamento de séries.
+- Gerenciamento de categorias.
+- Gerenciamento de preços.
+- Gerenciamento de planos.
+- Gerenciamento de locações.
+- Gerenciamento de banners.
+- Gerenciamento de trailers.
+- Gerenciamento de vídeos.
+
+Permitir cadastrar filmes manualmente.
+
+Campos do filme:
+- Título.
+- Sinopse.
+- Capa.
+- Banner.
+- Ano.
+- Duração.
+- Gêneros.
+- Elenco.
+- Direção.
+- Classificação.
+- Trailer.
+- Arquivo ou endereço de armazenamento do vídeo.
+- Tipo de acesso.
+- Preço de aluguel.
+- Tempo de locação.
+- Status de publicação.
+
+Criar upload de imagens e vídeos.
+
+O administrador deverá poder definir se o filme será:
+- Gratuito.
+- Exclusivo para assinantes.
+- Disponível para aluguel.
+- Disponível por assinatura e aluguel.
+
+# 15. BANCO DE DADOS
+
+Criar banco de dados relacional organizado.
+
+Entidades sugeridas:
+
+- users
+- profiles
+- subscriptions
+- subscription_plans
+- movies
+- series
+- episodes
+- genres
+- movie_genres
+- rentals
+- payments
+- watch_history
+- watch_progress
+- favorites
+- reviews
+- achievements
+- user_achievements
+- banners
+- video_assets
+
+Criar relacionamentos, índices e chaves estrangeiras adequados.
+
+Implementar migrações e dados iniciais de demonstração.
+
+# 16. SEGURANÇA
+
+Implementar:
+
+- Senhas com hash seguro.
+- Autenticação.
+- Autorização por função.
+- Proteção de rotas.
+- Validação de entradas.
+- Proteção contra SQL Injection.
+- Proteção contra XSS.
+- Proteção contra CSRF quando aplicável.
+- Rate limiting.
+- Webhooks com validação de assinatura.
+- URLs assinadas para reprodução.
+- Segredos somente no backend.
+- Controle de acesso aos conteúdos.
+
+Não expor credenciais, tokens ou informações privadas no frontend.
+
+# 17. TECNOLOGIAS
+
+Primeiro, examine os arquivos e o ambiente de desenvolvimento disponíveis.
+
+Se já existir um projeto Retro Play, preserve e aproveite o que for útil.
+
+Não substitua arquivos existentes sem antes analisar sua função.
+
+Se não existir estrutura aproveitável, utilize uma arquitetura moderna:
+
+Frontend:
+- React.
+- TypeScript.
+- Vite.
+- CSS organizado.
+- Componentes reutilizáveis.
+
+Backend:
+- Node.js.
+- Express ou NestJS.
+- TypeScript.
+
+Banco:
+- PostgreSQL.
+
+Vídeo:
+- FFmpeg.
+- HLS.
+- Armazenamento S3 compatível.
+- CDN.
+
+Autenticação:
+- Sessões seguras ou JWT com estratégia adequada.
+
+Pagamentos:
+- Provedor com ambiente de testes.
+
+Player:
+- Video.js ou solução equivalente compatível com HLS.
+
+# 18. EXPERIÊNCIA E DESEMPENHO
+
+O site deverá:
+
+- Carregar rapidamente.
+- Utilizar lazy loading nas imagens.
+- Otimizar imagens.
+- Evitar carregar vídeos antes da reprodução.
+- Utilizar paginação ou carregamento progressivo.
+- Utilizar cache.
+- Utilizar CDN.
+- Evitar consultas desnecessárias ao banco.
+- Ter componentes reutilizáveis.
+- Funcionar em diferentes tamanhos de tela.
+
+Não carregar o catálogo inteiro de uma só vez.
+
+# 19. TESTES OBRIGATÓRIOS
+
+Não considerar o projeto concluído apenas porque as páginas aparecem.
+
+Testar os seguintes cenários:
+
+1. Usuário cria uma conta.
+2. Usuário entra na conta.
+3. Usuário navega pelo catálogo.
+4. Usuário tenta assistir a um filme bloqueado.
+5. Sistema oferece assinatura e aluguel.
+6. Usuário realiza pagamento de teste de assinatura.
+7. Backend confirma o pagamento.
+8. Assinatura é ativada.
+9. Usuário consegue assistir ao conteúdo permitido.
+10. Usuário cancela a assinatura.
+11. Acesso à assinatura expira conforme as regras.
+12. Usuário sem assinatura aluga um filme.
+13. Pagamento do aluguel é confirmado.
+14. Filme é liberado pelo período correto.
+15. Aluguel continua válido mesmo sem assinatura.
+16. Aluguel expirado deixa de permitir reprodução.
+17. Usuário consegue continuar assistindo.
+18. Usuário adiciona filmes aos favoritos.
+19. Administrador cadastra um novo filme.
+20. Administrador consegue gerenciar planos e conteúdos.
+
+Testar também os erros de pagamento e tentativas de acesso não autorizado.
+
+# 20. ENTREGA FINAL
+
+Quero que você trabalhe diretamente no ambiente de desenvolvimento disponível.
+
+Etapas:
+
+1. Inspecionar os arquivos existentes.
+2. Identificar o que pode ser reaproveitado.
+3. Planejar a arquitetura.
+4. Criar o frontend.
+5. Criar o backend.
+6. Criar o banco de dados.
+7. Implementar autenticação.
+8. Implementar assinaturas.
+9. Implementar aluguel.
+10. Implementar pagamentos de teste.
+11. Implementar reprodução de vídeos.
+12. Implementar painel administrativo.
+13. Implementar funcionalidades criativas.
+14. Executar testes.
+15. Corrigir os erros encontrados.
+16. Documentar a instalação e execução.
+
+Não deixar botões decorativos sem funcionamento.
+
+Não utilizar dados falsos para simular operações que deveriam ser reais, exceto quando explicitamente identificados como dados de demonstração.
+
+Se alguma integração depender de credenciais externas, configure a estrutura e documente exatamente o que falta, sem inventar credenciais.
+
+Não afirmar que um recurso está funcionando sem testá-lo.
+
+Ao finalizar, apresentar:
+- Estrutura de pastas.
+- Tecnologias utilizadas.
+- Funcionalidades implementadas.
+- Funcionalidades testadas.
+- Como executar localmente.
+- Como configurar o banco.
+- Como configurar o armazenamento de vídeos.
+- Como configurar os pagamentos.
+- Pendências e integrações que dependem de serviços externos.
+
+**OBJETIVO FINAL: ENTREGAR UMA PLATAFORMA RETRO PLAY FUNCIONAL, PROFISSIONAL, ESCALÁVEL E PREPARADA PARA RECEBER USUÁRIOS REAIS.**

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="860" viewBox="0 0 600 860" role="img" aria-label="Cartaz ESTAÇÃO AMANHÃ">
+<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#e4d6dd"/><stop offset="1" stop-color="#f5eadc"/></linearGradient><pattern id="dots" width="24" height="24" patternUnits="userSpaceOnUse"><circle cx="12" cy="12" r="1" fill="#a88fbc" opacity=".25"/></pattern></defs>
+<rect width="600" height="860" rx="32" fill="url(#g)"/><rect width="600" height="860" fill="url(#dots)"/><rect x="36" y="35" width="528" height="790" rx="270" fill="none" stroke="#a88fbc" stroke-opacity=".6" stroke-width="3"/>
+<rect x="66" y="67" width="468" height="726" rx="232" fill="none" stroke="white" stroke-opacity=".62" stroke-width="2"/>
+<circle cx="300" cy="350" r="178" fill="#a88fbc" opacity=".58"/><circle cx="331" cy="315" r="129" fill="#f5eadc" opacity=".84"/><circle cx="265" cy="347" r="103" fill="#e4d6dd" opacity=".83"/>
+<path d="M85 530Q180 450 267 535T515 511V723H85Z" fill="#a88fbc" opacity=".6"/><path d="M82 598Q190 515 296 610T518 560V725H82Z" fill="#f5eadc" opacity=".62"/>
+<text x="300" y="144" text-anchor="middle" fill="#55434a" font-family="Georgia,serif" font-size="21" font-weight="bold" letter-spacing="7">RETRO PLAY PRESENTS</text>
+<text x="300" y="380" text-anchor="middle" fill="#fffaf4" font-family="Georgia,serif" font-size="190">⌁</text>
+<text x="300" y="662" text-anchor="middle" fill="#46353a" font-family="Georgia,serif" font-size="45" font-weight="bold" textLength="460" lengthAdjust="spacingAndGlyphs">ESTAÇÃO</text>
+<text x="300" y="711" text-anchor="middle" fill="#46353a" font-family="Georgia,serif" font-size="48" font-weight="bold" textLength="450" lengthAdjust="spacingAndGlyphs">AMANHÃ</text>
+<text x="300" y="764" text-anchor="middle" fill="#6f565e" font-family="Arial,sans-serif" letter-spacing="6" font-size="15">UMA HISTÓRIA PARA GUARDAR</text>
+</svg>

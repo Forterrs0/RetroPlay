@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: retroplay-staging
+    runtime: node
+    plan: free
+    buildCommand: npm install --omit=dev
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: HOST
+        value: 0.0.0.0
+      - key: RETRO_DB_ENGINE
+        value: postgres
+      - key: RETRO_PUBLIC_STAGING
+        value: YES
+      - key: COOKIE_SECURE
+        value: 'true'
+      - key: DATABASE_URL
+        sync: false
+      - key: RETRO_SECRET
+        generateValue: true
