@@ -342,10 +342,12 @@ export function createApp({publicDir=path.join(BASE,'public'),secret=process.env
           const data=await getBody(req),title=String(data.title||'').trim(),slug=String(data.slug||'').trim().toLowerCase();
           if(title.length<2||title.length>100||!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug))fail(400,'Título ou slug inválido.');
           if(!['free','subscription','rental','both'].includes(data.accessType))fail(400,'Tipo de acesso inválido.');
-          const videoFile=String(data.videoFile||'cafe-das-estrelas.mp4').trim();
+          const videoFile=String(data.videoFile||(process.env.NODE_ENV==='production'?'':'cafe-das-estrelas.mp4')).trim();
+          if(process.env.NODE_ENV==='production'&&!videoFile)fail(400,'Selecione um MP4 antes de cadastrar o filme.');
           if(isB2Video(videoFile)){
             if(!media)fail(503,'Backblaze B2 indisponível.');
-            await media.verify({proof:data.videoUploadToken,kind:'video',owner:session.user_id,path:videoFile});
+            try {await media.verify({proof:data.videoUploadToken,kind:'video',owner:session.user_id,path:videoFile});}
+            catch(error){if(error.status)throw error;console.error('[Retro Play] Falha ao verificar vídeo no B2:',error.name,error.message);fail(502,'Não foi possível verificar o vídeo no Backblaze. Consulte os logs do servidor.');}
           } else {
             if(process.env.NODE_ENV==='production')fail(400,'Envie um MP4 para o B2.');
             if(!/^[a-zA-Z0-9-]+\.mp4$/.test(videoFile)||!fs.existsSync(path.join(BASE,'storage','videos',videoFile)))fail(400,'Vídeo local inválido.');
@@ -353,7 +355,8 @@ export function createApp({publicDir=path.join(BASE,'public'),secret=process.env
           const poster=String(data.poster||'/assets/posters/01.svg');
           if(isB2Poster(poster)){
             if(!media)fail(503,'Backblaze B2 indisponível.');
-            await media.verify({proof:data.posterUploadToken,kind:'poster',owner:session.user_id,path:poster});
+            try {await media.verify({proof:data.posterUploadToken,kind:'poster',owner:session.user_id,path:poster});}
+            catch(error){if(error.status)throw error;console.error('[Retro Play] Falha ao verificar capa no B2:',error.name,error.message);fail(502,'Não foi possível verificar a capa no Backblaze. Consulte os logs do servidor.');}
           }else if(!/^\/(assets\/posters\/|uploads\/)[a-zA-Z0-9._-]+\.(svg|png|jpg|jpeg|webp)$/.test(poster))fail(400,'Capa inválida.');
           if(data.genres!==undefined&&(!Array.isArray(data.genres)||data.genres.length>8||data.genres.some(x=>typeof x!=='string'||x.trim().length<2||x.trim().length>50)))fail(400,'Gêneros inválidos.');
           const result=(await db.prepare(`INSERT INTO movies(slug,title,synopsis,year,duration_sec,age_rating,director,cast_text,access_type,rental_cents,rental_start_days,rental_watch_hours,poster,banner,video_file,published,featured,demo,created_at)
