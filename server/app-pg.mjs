@@ -5,6 +5,7 @@ import crypto from 'node:crypto';
 import {fileURLToPath} from 'node:url';
 import {createPgPool,pgDb,movieRows} from './pg-db.mjs';
 import {now,later,randomId,hashPassword,checkPassword,currentSession,signedVideoToken,verifyVideoToken} from './auth-pg.mjs';
+import {b2Ready,b2Origin,createB2Media,isB2Video,isB2Poster,videoKey,posterKey} from './b2-media.mjs';
 
 const BASE=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const mime={'.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.js':'text/javascript; charset=utf-8','.svg':'image/svg+xml','.png':'image/png','.jpg':'image/jpeg','.jpeg':'image/jpeg','.webp':'image/webp','.mp4':'video/mp4','.ico':'image/x-icon','.webmanifest':'application/manifest+json','.vtt':'text/vtt; charset=utf-8'};
@@ -82,6 +83,7 @@ function videoFile(res,file,req){let stat;try{stat=fs.statSync(file);}catch{resp
 }
 export function createApp({publicDir=path.join(BASE,'public'),secret=process.env.RETRO_SECRET||crypto.randomBytes(48).toString('hex'),cookieSecure=process.env.COOKIE_SECURE==='true'}={}) {
   const pool=createPgPool(process.env.DATABASE_URL),rate=new Map();
+  const media=b2Ready()?createB2Media():null;
   const server=http.createServer(async(req,res)=>{
     const u=new URL(req.url,'http://local.test');const pathname=decodeURIComponent(u.pathname);
     const method=req.method||'GET';
@@ -98,7 +100,8 @@ export function createApp({publicDir=path.join(BASE,'public'),secret=process.env
       res.setHeader('X-Frame-Options','DENY');
       res.setHeader('Referrer-Policy','strict-origin-when-cross-origin');
       if(process.env.NODE_ENV==='production') res.setHeader('Strict-Transport-Security','max-age=31536000; includeSubDomains');
-      res.setHeader('Content-Security-Policy',"default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; media-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'");
+      const storageOrigin=b2Origin();
+      res.setHeader('Content-Security-Policy',`default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: ${storageOrigin}; media-src 'self' ${storageOrigin}; connect-src 'self' ${storageOrigin}; object-src 'none'; base-uri 'self'; frame-ancestors 'none'`);
       if(pathname.startsWith('/api/') && !['GET','HEAD','OPTIONS'].includes(method)){
         const origin=req.headers.origin;
         if(origin && new URL(origin).host!==req.headers.host)fail(403,'Origem da solicitação inválida.');
@@ -111,6 +114,20 @@ export function createApp({publicDir=path.join(BASE,'public'),secret=process.env
       // Armazenamento local não é persistente no serviço web sem disco externo.
       if(process.env.NODE_ENV==='production' && pathname==='/api/admin/upload')
         fail(503,'Uploads desativados na hospedagem temporária. Configure armazenamento externo antes de liberar.');
+      if(method==='GET'&&/^\/api\/media\/poster\/[a-f0-9-]{36}\.(png|jpg|webp)$/.test(pathname)){
+        if(!media)fail(503,'Armazenamento de mídia não configurado.');
+        // Public covers; videos remain protected by the session and entitlement.
+        const key=posterKey(pathname);
+        const found=await db.prepare('SELECT id FROM movies WHERE (poster=? OR banner=?) AND published=1 LIMIT 1').get(pathname,pathname);
+        if(!found)fail(404,'Capa não publicada.');
+        res.writeHead(302,{'Location':await media.download(key,600),'Cache-Control':'private, no-store'});return res.end();
+      }
+      if(method==='POST'&&pathname==='/api/admin/upload/prepare'){
+        requireAdmin(session);
+        if(!media)fail(503,'Backblaze B2 não configurado no servidor.');
+        const input=await getBody(req);
+        return json(200,await media.prepare({kind:input.kind,contentType:input.contentType,size:input.size,owner:session.user_id}));
+      }
       if(method==='GET'&&pathname==='/api/health')return json(200,{ok:true,version:'3.1.0',database:'postgresql',mode:'sandbox'});
       if(method==='GET'&&pathname==='/api/bootstrap'){
         const profiles=session?(await db.prepare('SELECT id,name,avatar,is_kid FROM profiles WHERE user_id=? ORDER BY id').all(session.user_id)):[];
@@ -244,7 +261,7 @@ export function createApp({publicDir=path.join(BASE,'public'),secret=process.env
         if(access.source==='rental'&&!access.rental.started_at){const start=now();(await db.prepare('UPDATE rentals SET started_at=?,expires_at=? WHERE id=?').run(start,isoPlus(start,0,m.rental_watch_hours),access.rental.id));}
         if(session?.profile_id){(await db.prepare('INSERT INTO watch_history(profile_id,movie_id,watched_at) VALUES(?,?,?)').run(session.profile_id,m.id,now()));(await award(db,session.profile_id));}
         const token=signedVideoToken(secret,m.id,session?.user_id||0);
-        const hlsAvailable=fs.existsSync(path.join(BASE,'storage','hls',path.basename(m.video_file,'.mp4'),'master.m3u8'));
+        const hlsAvailable=!isB2Video(m.video_file)&&fs.existsSync(path.join(BASE,'storage','hls',path.basename(m.video_file,'.mp4'),'master.m3u8'));
         return json(200,{videoUrl:`/api/stream/${m.id}?token=${encodeURIComponent(token)}`,resumeAt:session?.profile_id?((await db.prepare('SELECT position_sec FROM watch_progress WHERE profile_id=? AND movie_id=?').get(session.profile_id,m.id))?.position_sec||0):0,format:'mp4',hlsUrl:hlsAvailable?`/api/hls/${m.id}/master.m3u8?token=${encodeURIComponent(token)}`:null,hls240Url:hlsAvailable?`/api/hls/${m.id}/240p/index.m3u8?token=${encodeURIComponent(token)}`:null,hls360Url:hlsAvailable?`/api/hls/${m.id}/360p/index.m3u8?token=${encodeURIComponent(token)}`:null,demo:!!m.demo});
       }
       if(method==='POST'&&pathname==='/api/progress'){
@@ -259,6 +276,11 @@ export function createApp({publicDir=path.join(BASE,'public'),secret=process.env
         const mid=Number(match(/^\/api\/stream\/(\d+)$/)[1]);const m=(await db.prepare('SELECT * FROM movies WHERE id=?').get(mid));
         if(!m||!m.published)fail(404,'Vídeo não encontrado.');
         if(!verifyVideoToken(secret,u.searchParams.get('token'),mid,session?.user_id||0)||!(await entitlement(db,m,session)).allowed)fail(403,'Acesso ao vídeo negado.');
+        if(isB2Video(m.video_file)){
+          if(!media)fail(503,'Armazenamento indisponível.');
+          // Short lived B2 URL. This check occurs on each request to this endpoint.
+          res.writeHead(302,{'Location':await media.download(videoKey(m.video_file),300),'Cache-Control':'private, no-store'});return res.end();
+        }
         const folder=path.join(BASE,'storage','videos');const filename=path.basename(m.video_file);
         return videoFile(res,path.join(folder,filename),req);
       }
@@ -321,12 +343,21 @@ export function createApp({publicDir=path.join(BASE,'public'),secret=process.env
           if(title.length<2||title.length>100||!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug))fail(400,'Título ou slug inválido.');
           if(!['free','subscription','rental','both'].includes(data.accessType))fail(400,'Tipo de acesso inválido.');
           const videoFile=String(data.videoFile||'cafe-das-estrelas.mp4').trim();
-          if(!/^[a-zA-Z0-9-]+\.mp4$/.test(videoFile))fail(400,'Nome de vídeo inválido.');
-          if(!fs.existsSync(path.join(BASE,'storage','videos',videoFile)))fail(400,'Envie um MP4 autorizado antes de cadastrar o filme.');
-          const poster=String(data.poster||'/assets/posters/01.svg');if(!/^\/(assets\/posters\/|uploads\/)[a-zA-Z0-9._-]+\.(svg|png|jpg|jpeg|webp)$/.test(poster))fail(400,'Capa inválida.');
+          if(isB2Video(videoFile)){
+            if(!media)fail(503,'Backblaze B2 indisponível.');
+            await media.verify({proof:data.videoUploadToken,kind:'video',owner:session.user_id,path:videoFile});
+          } else {
+            if(process.env.NODE_ENV==='production')fail(400,'Envie um MP4 para o B2.');
+            if(!/^[a-zA-Z0-9-]+\.mp4$/.test(videoFile)||!fs.existsSync(path.join(BASE,'storage','videos',videoFile)))fail(400,'Vídeo local inválido.');
+          }
+          const poster=String(data.poster||'/assets/posters/01.svg');
+          if(isB2Poster(poster)){
+            if(!media)fail(503,'Backblaze B2 indisponível.');
+            await media.verify({proof:data.posterUploadToken,kind:'poster',owner:session.user_id,path:poster});
+          }else if(!/^\/(assets\/posters\/|uploads\/)[a-zA-Z0-9._-]+\.(svg|png|jpg|jpeg|webp)$/.test(poster))fail(400,'Capa inválida.');
           if(data.genres!==undefined&&(!Array.isArray(data.genres)||data.genres.length>8||data.genres.some(x=>typeof x!=='string'||x.trim().length<2||x.trim().length>50)))fail(400,'Gêneros inválidos.');
           const result=(await db.prepare(`INSERT INTO movies(slug,title,synopsis,year,duration_sec,age_rating,director,cast_text,access_type,rental_cents,rental_start_days,rental_watch_hours,poster,banner,video_file,published,featured,demo,created_at)
-            VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`).run(slug,title,String(data.synopsis||''),Number(data.year)||2026,Math.max(1,Number(data.durationSec)||300),Number(data.ageRating)||0,String(data.director||''),String(data.castText||''),data.accessType,Math.max(0,Number(data.rentalCents)||0),Number(data.rentalStartDays)||30,Number(data.rentalWatchHours)||48,poster,poster,videoFile,1,0,1,now()));
+            VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`).run(slug,title,String(data.synopsis||''),Number(data.year)||2026,Math.max(1,Number(data.durationSec)||300),Number(data.ageRating)||0,String(data.director||''),String(data.castText||''),data.accessType,Math.max(0,Number(data.rentalCents)||0),Number(data.rentalStartDays)||30,Number(data.rentalWatchHours)||48,poster,poster,videoFile,1,0,0,now()));
           for(const genre of (data.genres||[])){
             const name=genre.trim();(await db.prepare('INSERT OR IGNORE INTO genres(name) VALUES(?)').run(name));
             const gid=(await db.prepare('SELECT id FROM genres WHERE name=?').get(name)).id;
